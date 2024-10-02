@@ -4,8 +4,6 @@ import { connectDB } from './src/db.js';
 
 connectDB()
 
-
-
 app.listen(config.port, () => {
     console.log(`Servidor corriendo en puerto ${config.port}`)
 })

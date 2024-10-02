@@ -28,17 +28,17 @@ export const getPsicologoById = async (req, res) => {
 }
 
 export const createPsicologo = async (req, res) => {
-    const { nombre, apellido, email, telefono, especialidad, password } = req.body;
+    const { nombre, apellido, email, telefono, especialidad, password, titulo, descripcion, universidad } = req.body;
     
-        if (!nombre || !apellido || !email || !telefono || !especialidad || !password ) {
+        if (!nombre || !apellido || !email || !telefono || !especialidad || !password || !titulo || !descripcion || !universidad) {
         return res.status(400).json({ Error: "Todos los campos son requeridos" });
     }
     const hash = await bcrypt.hash(password, 10)
     try {
         const result = await query(
-            `INSERT INTO psicologos (nombre, apellido, email, telefono, especialidad, created_at, updated_at, password) 
-             VALUES (?, ?, ?, ?, ?, NOW(), NOW(), ?)`,
-            [nombre, apellido, email, telefono, especialidad, hash ]
+            `INSERT INTO psicologos (nombre, apellido, email, telefono, especialidad, created_at, updated_at, password, titulo, descripcion, universidad) 
+             VALUES (?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, ?)`,
+            [nombre, apellido, email, telefono, especialidad, hash, titulo, descripcion, universidad]
         );
         res.status(201).json({ message: 'Psicologo creado exitosamente', id_psicologo: result.insertId });
     } catch (error) {
@@ -48,9 +48,9 @@ export const createPsicologo = async (req, res) => {
 
 export const updatePsicologo = async (req, res) => {
     const { id } = req.params;
-    const { nombre, apellido, email, telefono, especialidad, password } = req.body;
+    const { nombre, apellido, email, telefono, especialidad, password, titulo, descripcion, universidad } = req.body;
     
-    if (!nombre || !apellido || !email || !telefono || !especialidad || !password ) {
+    if (!nombre || !apellido || !email || !telefono || !especialidad || !password || !titulo || !descripcion || !universidad) {
         return res.status(400).json({ Error: "Todos los campos son requeridos" });
     }
     const hash = await bcrypt.hash(password, 10)
@@ -62,10 +62,10 @@ export const updatePsicologo = async (req, res) => {
 
         const result = await query(
             `UPDATE psicologos 
-             SET nombre = ?, apellido = ?, email = ?, telefono = ?, especialidad = ?, updated_at = NOW(), password = ?  
+             SET nombre = ?, apellido = ?, email = ?, telefono = ?, especialidad = ?, updated_at = NOW(), password = ?, titulo = ?, descripcion = ?, universidad = ?  
              WHERE id_psicologo = ?`,
-            [nombre, apellido, email, telefono, especialidad, hash , id]
-        );
+             [nombre, apellido, email, telefono, especialidad, hash, titulo, descripcion, universidad, id]
+            );
 
         if (result.affectedRows > 0) {
             res.json({ message: 'Psicólogo actualizado exitosamente' });

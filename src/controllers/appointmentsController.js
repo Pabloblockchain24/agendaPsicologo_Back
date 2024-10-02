@@ -24,17 +24,17 @@ export const getAppointmentById = async (req, res) => {
 }
 
 export const createAppointment = async (req, res) => {
-    const { id_paciente, id_psicologo, fecha, hora, estado, observaciones} = req.body
+    const { rut_paciente, id_psicologo, fecha, hora } = req.body
 
-    if (!id_paciente || !id_psicologo || !fecha || !hora || !estado || !observaciones) {
+    if (!rut_paciente || !id_psicologo || !fecha || !hora ) {
         return res.status(400).json({ Error: "Todos los campos son requeridos" });
     }
 
     try {
         const result = await query(
-            `INSERT INTO sesiones (id_paciente, id_psicologo, fecha, hora, estado, observaciones, created_at, updated_at) 
-             VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())`,
-            [id_paciente, id_psicologo, fecha, hora, estado, observaciones ]
+            `INSERT INTO sesiones (rut_paciente, id_psicologo, fecha, hora, estado, observaciones, created_at, updated_at) 
+             VALUES (?, ?, ?, ?, 'pendiente', ' ', NOW(), NOW())`,
+            [rut_paciente, id_psicologo, fecha, hora ]
         );
         res.status(201).json({ message: 'Sesion creada exitosamente', id_sesion: result.insertId });
     } catch (error) {
