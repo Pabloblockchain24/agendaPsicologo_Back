@@ -1,6 +1,4 @@
-import mysql from 'mysql2';
-
-
+import mysql from 'mysql2/promise';
 
 
 // const connection = mysql.createConnection({
@@ -32,7 +30,7 @@ import mysql from 'mysql2';
 //     });
 //   };
   
-import mysql from 'mysql2/promise';
+// import mysql from 'mysql2/promise';
 
 // Crear un pool de conexiones
 const pool = mysql.createPool({
@@ -58,4 +56,4 @@ export const query = async (sql, params = []) => {
 };
 
 
-export default connection;
+// export default connection;
