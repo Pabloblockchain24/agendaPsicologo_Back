@@ -4,14 +4,37 @@ import bcrypt from "bcrypt"
 /*Import DB connection*/
 import { query } from "../db.js";
 
+// export const getPsicologos = async (req, res) => {
+//     try {
+//         const psicologos = await query('SELECT * FROM psicologos order by updated_at desc');
+//                 res.json(psicologos);
+//     } catch (error) {
+//         res.status(500).json({ text: "Error al obtener los psicologos", error: error.message });
+//     }   
+// }
 export const getPsicologos = async (req, res) => {
     try {
-        const psicologos = await query('SELECT * FROM psicologos order by updated_at desc');
-                res.json(psicologos);
+        const psicologos = [
+            {
+                id_psicologo: 1,
+                nombre: "Nicolae",
+                apellido: "Carrasco",
+                email: "ncarrasco@gmail.com",
+                telefono: "11111111",
+                especialidad: "Psicología clínica",
+                titulo: "Licenciado en Psicología",
+                descripcion: "Psicólogo con más de 10 años de experiencia en terapia cognitivo-conductual.",
+                universidad: "Universidad de Buenos Aires",
+                created_at: "2024-01-01T00:00:00Z",
+                updated_at: "2024-01-10T00:00:00Z"
+            }
+        ];
+        res.json(psicologos);
     } catch (error) {
-        res.status(500).json({ text: "Error al obtener los psicologos", error: error.message });
-    }   
+        res.status(500).json({ text: "Error al obtener los psicólogos (demo)", error: error.message });
+    }
 }
+
 
 export const getPsicologoById = async (req, res) => {
     const { id } = req.params;
