@@ -10,7 +10,10 @@ import {
   getPatientById,
   createPatient, 
   updatePatient, 
-  deletePatient 
+  deletePatient,
+  getPatientByRut,
+  updatePatientContact ,
+  createNewPatientByContact
 } from "../controllers/patientsController.js";
 
 /*Routes for each endpoint*/
@@ -18,7 +21,11 @@ router.get("/patients", getPatients)
 router.post("/patient", createPatient)
 
 router.get("/patient/:id", getPatientById)
-router.put("/patient/:id", updatePatient)
+router.get("/patientByRut/:rut", getPatientByRut)
+
+router.post("/createNewPatientByContact", createNewPatientByContact)
+
+router.put("/updatePatient", updatePatientContact)
 router.delete("/patient/:id", deletePatient)
 
 export default router

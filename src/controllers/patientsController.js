@@ -6,7 +6,7 @@ import { query } from "../db.js";
 export const getPatients = async (req, res) => {
     try {
         const patients = await query('SELECT * FROM pacientes order by updated_at desc');
-                res.json(patients);
+        res.json(patients);
     } catch (error) {
         res.status(500).json({ text: "Error al obtener los pacientes", error: error.message });
     }
@@ -17,7 +17,7 @@ export const getPatientById = async (req, res) => {
     try {
         const patient = await query(`SELECT * FROM pacientes WHERE id_paciente = ?`, [id]);
         if (patient.length > 0) {
-            res.json(patient[0]); 
+            res.json(patient[0]);
         } else {
             res.status(404).json({ text: "Paciente no encontrado" });
         }
@@ -25,6 +25,25 @@ export const getPatientById = async (req, res) => {
         res.status(500).json({ text: "Error al obtener el paciente", error: error.message });
     }
 };
+
+export const getPatientByRut = async (req, res) => {
+    const { rut } = req.params;
+
+    try {
+        const patient = await query(`SELECT * FROM pacientes WHERE rut = ?`, [rut]);
+        if (patient.length > 0) {
+            res.json({
+                rut: patient[0].rut,
+                email: patient[0].email,
+                telefono: patient[0].telefono
+            });
+        } else {
+            res.status(404).json({ text: "Paciente no encontrado" });
+        }
+    } catch (error) {
+        res.status(500).json({ text: "Error al obtener el paciente", error: error.message });
+    }
+}
 
 export const createPatient = async (req, res) => {
     const { nombre, apellido, fecha_nacimiento, email, telefono } = req.body
@@ -42,6 +61,55 @@ export const createPatient = async (req, res) => {
     }
 }
 
+
+export const updatePatientContact = async (req, res) => {
+    const { patientData } = req.body
+    const { rut, correo, telefono } = patientData;  
+
+  
+    if (!rut || !correo || !telefono) {
+        return res.status(400).json({ text: "Todos los campos son requeridos" });
+    }
+    try {
+        const result = await query(
+            `UPDATE pacientes 
+         SET email = ?, telefono = ?, updated_at = NOW() 
+         WHERE rut = ?`,
+            [correo, telefono, rut]
+        );
+        if (result.affectedRows > 0) {
+            res.json({ message: 'Paciente actualizado exitosamente' });
+        } else {
+            res.status(404).json({ text: "Paciente no encontrado" });
+        }
+    } catch (error) {
+        res.status(500).json({ text: "Error al actualizar el paciente", error: error.message });
+    }
+}
+
+
+export const createNewPatientByContact = async (req, res) => {
+    const { patientData } = req.body;
+    const { rut, correo, telefono } = patientData;
+
+     if (!rut || !correo || !telefono) {
+        return res.status(400).json({ text: "Todos los campos son requeridos" });
+    }
+
+    try {
+        const result = await query(
+            `INSERT INTO pacientes (rut, email, telefono, fecha_registro, updated_at) 
+             VALUES (?, ?, ?, NOW(), NOW())`,
+            [rut, correo, telefono]  // Se pasan los valores correspondientes a rut, correo y teléfono
+        );
+        res.status(201).json({ message: 'Paciente creado exitosamente', id_paciente: result.insertId });
+    } catch (error) {
+        res.status(500).json({ message: 'Error al crear el paciente', error: error.message });
+    }
+};
+
+
+
 export const updatePatient = async (req, res) => {
     const { id } = req.params;
     const { nombre, apellido, fecha_nacimiento, email, telefono } = req.body;
@@ -49,7 +117,7 @@ export const updatePatient = async (req, res) => {
     if (!id || !nombre || !apellido || !fecha_nacimiento || !email || !telefono) {
         return res.status(400).json({ text: "Todos los campos son requeridos" });
     }
-   const formattedFechaNacimiento = new Date(fecha_nacimiento).toISOString().split('T')[0];
+    const formattedFechaNacimiento = new Date(fecha_nacimiento).toISOString().split('T')[0];
 
     try {
         const patientExists = await query(`SELECT 1 FROM pacientes WHERE id_paciente = ?`, [id]);
@@ -75,7 +143,7 @@ export const updatePatient = async (req, res) => {
 };
 
 export const deletePatient = async (req, res) => {
-    const { id } = req.params; 
+    const { id } = req.params;
     try {
         const patientExists = await query(`SELECT 1 FROM pacientes WHERE id_paciente = ?`, [id]);
         if (patientExists.length === 0) {

@@ -10,7 +10,8 @@ import {
     createAppointment,
     getAppointmentById,
     updateAppointment,
-    deleteAppointment
+    deleteAppointment,
+    confirmationAppointmentMail
 } from "../controllers/appointmentsController.js";
 
 /*Routes for each endpoint*/
@@ -20,6 +21,8 @@ router.post("/appointment", createAppointment)
 router.get("/appointment/:id", getAppointmentById)
 router.put("/appointment/:id", updateAppointment)
 router.delete("/appointment/:id", deleteAppointment)
+
+router.post("/confirmationAppointmentMail", confirmationAppointmentMail )
 
 
 export default router

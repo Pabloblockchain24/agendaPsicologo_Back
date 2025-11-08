@@ -7,6 +7,7 @@ import cors from "cors"
 import patientRouter from "./routes/patient.routes.js"
 import appointmentRouter from "./routes/appointment.routes.js"
 import psicologosRouter from "./routes/psicologos.routes.js"
+import contactRouter from "./routes/contact.routes.js"
 
 /*Instancia de express.js*/
 const app = express();
@@ -19,8 +20,8 @@ app.use(cookieParser())
 /*Cors configuration*/
 const allowedOrigins = [
     'http://localhost:5173',
-    'https://agenda-psicologo-front.vercel.app/',
-
+    'https://agenda-psicologo-front.vercel.app',
+    '*'
 ];
 const corsOptions = {
     origin: (origin, callback) => {
@@ -43,5 +44,5 @@ app.use(cors(corsOptions));
 app.use("/api", patientRouter)
 app.use("/api", appointmentRouter)
 app.use("/api", psicologosRouter)
-
+app.use("/api", contactRouter)
 export default app
